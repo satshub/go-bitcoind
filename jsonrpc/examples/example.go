@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	SERVER_HOST        = ""
-	SERVER_PORT        = 8334
-	USER               = "bitcoinrpc"
-	PASSWD             = "sss"
+	SERVER_HOST        = "106.75.5.22"
+	SERVER_PORT        = 38332
+	USER               = "sathub.user"
+	PASSWD             = "sathub.pass"
 	USESSL             = false
 	WALLET_PASSPHRASE  = "p1"
 	WALLET_PASSPHRASE2 = "p2"
@@ -23,8 +23,8 @@ func main() {
 	}
 
 	//walletpassphrase
-	err = bc.WalletPassphrase(WALLET_PASSPHRASE, 3600)
-	log.Println(err)
+	//err = bc.WalletPassphrase(WALLET_PASSPHRASE, 3600)
+	//log.Println(err)
 
 	// backupwallet
 	/*
@@ -74,10 +74,8 @@ func main() {
 	*/
 
 	// getbestblockhash
-	/*
-		bestblockhash, err := bc.GetBestBlockhash()
-		log.Println(err, bestblockhash)
-	*/
+	bestblockhash, err := bc.GetBestBlockhash()
+	log.Println(err, bestblockhash)
 
 	// getblock
 	/*

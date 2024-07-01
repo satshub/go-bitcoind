@@ -36,6 +36,8 @@ github.com/btcsuite/websocket v0.0.0-20150119174127-31079b680792/go.mod h1:ghJtE
 github.com/btcsuite/winsvc v1.0.0/go.mod h1:jsenWakMcC0zFBFurPLEAyrnc/teJEM1O46fmI40EZs=
 github.com/bxelab/runestone v0.0.0-20240428164824-a36ade29b6f9 h1:vQzL9/RqazAbUe0o5OwVCMIQllDl1Nfzvx2JYcwGurI=
 github.com/bxelab/runestone v0.0.0-20240428164824-a36ade29b6f9/go.mod h1:pieyLaoNj2JsfnMzZm9McEZmGU804aTBsRQNTwqeqVk=
+github.com/checksum0/go-electrum v0.0.0-20220912200153-b862ac442cf9 h1:PEkrrCdN0F0wgeof+V8dwMabAYccVBgJfqysVdlT51U=
+github.com/checksum0/go-electrum v0.0.0-20220912200153-b862ac442cf9/go.mod h1:EjLxYzaf/28gOdSRlifeLfjoOA6aUjtJZhwaZPnjL9c=
 github.com/cmars/basen v0.0.0-20150613233007-fe3947df716e h1:0XBUw73chJ1VYSsfvcPvVT7auykAJce9FpRr10L6Qhw=
 github.com/cmars/basen v0.0.0-20150613233007-fe3947df716e/go.mod h1:P13beTBKr5Q18lJe1rIoLUqjM+CB1zYrRg44ZqGuQSA=
 github.com/davecgh/go-spew v0.0.0-20171005155431-ecdeabc65495/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -13,7 +13,7 @@ import (
 )
 
 func (c *MempoolClient) GetRawTransaction(txHash *chainhash.Hash) (*wire.MsgTx, error) {
-	res, err := c.request(http.MethodGet, fmt.Sprintf("/tx/%s/raw", txHash.String()), nil)
+	res, err := c.request(http.MethodGet, fmt.Sprintf("/tx/%s", txHash.String()), nil)
 	if err != nil {
 		return nil, err
 	}

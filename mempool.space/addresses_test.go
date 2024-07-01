@@ -11,7 +11,7 @@ func TestListUnspent(t *testing.T) {
 	// https://mempool.space/signet/api/address/tb1p8lh4np5824u48ppawq3numsm7rss0de4kkxry0z70dcfwwwn2fcspyyhc7/utxo
 	netParams := &chaincfg.SigNetParams
 	client := NewClient(netParams)
-	address, _ := btcutil.DecodeAddress("tb1p8lh4np5824u48ppawq3numsm7rss0de4kkxry0z70dcfwwwn2fcspyyhc7", netParams)
+	address, _ := btcutil.DecodeAddress("tb1q8my9pm67mhvz55q5zl9vpre8f6zff472wmtu5r", netParams)
 	unspentList, err := client.ListUnspent(address)
 	if err != nil {
 		t.Error(err)
