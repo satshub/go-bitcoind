@@ -2,6 +2,8 @@ module github.com/satshub/go-bitcoind
 
 go 1.22
 
+//toolchain go1.22.3
+
 require (
 	github.com/btcsuite/btcd v0.24.0
 	github.com/btcsuite/btcd/btcec/v2 v2.1.3

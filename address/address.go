@@ -1,6 +1,7 @@
-package address
+package main
 
 import (
+	"crypto/sha256"
 	"encoding/hex"
 	"flag"
 	"fmt"
@@ -278,7 +279,7 @@ func Generate(compress bool) (wif, address, segwitBech32, segwitNested, p2tr str
 
 func GenerateFromBytes(prvKey *btcec.PrivateKey, compress bool) (wif, address, segwitBech32, segwitNested, p2tr string, err error) {
 	// generate the wif(wallet import format) string
-	btcwif, err := btcutil.NewWIF(prvKey, &chaincfg.MainNetParams, compress)
+	btcwif, err := btcutil.NewWIF(prvKey, NetworkParams(), compress)
 	if err != nil {
 		return "", "", "", "", "", err
 	}
@@ -286,7 +287,7 @@ func GenerateFromBytes(prvKey *btcec.PrivateKey, compress bool) (wif, address, s
 
 	// generate a normal p2pkh address
 	serializedPubKey := btcwif.SerializePubKey()
-	addressPubKey, err := btcutil.NewAddressPubKey(serializedPubKey, &chaincfg.MainNetParams)
+	addressPubKey, err := btcutil.NewAddressPubKey(serializedPubKey, NetworkParams())
 	if err != nil {
 		return "", "", "", "", "", err
 	}
@@ -294,7 +295,7 @@ func GenerateFromBytes(prvKey *btcec.PrivateKey, compress bool) (wif, address, s
 
 	// generate a normal p2wkh address from the pubkey hash
 	witnessProg := btcutil.Hash160(serializedPubKey)
-	addressWitnessPubKeyHash, err := btcutil.NewAddressWitnessPubKeyHash(witnessProg, &chaincfg.MainNetParams)
+	addressWitnessPubKeyHash, err := btcutil.NewAddressWitnessPubKeyHash(witnessProg, NetworkParams())
 	if err != nil {
 		return "", "", "", "", "", err
 	}
@@ -308,26 +309,74 @@ func GenerateFromBytes(prvKey *btcec.PrivateKey, compress bool) (wif, address, s
 	if err != nil {
 		return "", "", "", "", "", err
 	}
-	addressScriptHash, err := btcutil.NewAddressScriptHash(serializedScript, &chaincfg.MainNetParams)
+	addressScriptHash, err := btcutil.NewAddressScriptHash(serializedScript, NetworkParams())
 	if err != nil {
 		return "", "", "", "", "", err
 	}
 	segwitNested = addressScriptHash.EncodeAddress()
 
-	p2trAddr := genPay2taprootAddress(prvKey)
+	p2trAddr := genP2TRAddress(prvKey)
 	return wif, address, segwitBech32, segwitNested, p2trAddr, nil
 }
 
+func genP2TRAddress(privateKey *btcec.PrivateKey) string {
+	privateKey, err := btcec.NewPrivateKey()
+	taprootAddress, err := btcutil.NewAddressTaproot(schnorr.SerializePubKey(txscript.ComputeTaprootKeyNoScript(privateKey.PubKey())), NetworkParams())
+	if err != nil {
+		log.Fatal(err)
+	}
+	return taprootAddress.EncodeAddress()
+}
+
+func Sha256(context string) string {
+	h := sha256.New()
+	h.Write([]byte(context))
+	bs := h.Sum(nil)
+
+	return fmt.Sprintf("%x", bs)
+}
+
+var network string
+
+func NetworkParams() *chaincfg.Params {
+	switch network {
+	case "mainnet":
+		return &chaincfg.MainNetParams
+	case "testnet":
+		return &chaincfg.TestNet3Params
+	case "signet":
+		return &chaincfg.SigNetParams
+	case "simnet":
+		return &chaincfg.SimNetParams
+	default:
+		return &chaincfg.MainNetParams
+	}
+}
 func main() {
 	compress := true // generate a compressed public key
-	bip39 := flag.Bool("bip39", false, "mnemonic code for generating deterministic keys")
+	bip39Enable := flag.Bool("bip39", false, "mnemonic code for generating deterministic keys")
 	pass := flag.String("pass", "", "protect bip39 mnemonic with a passphrase")
 	number := flag.Int("n", 10, "set number of keys to generate")
 	mnemonic := flag.String("mnemonic", "scout shoot capable river old waste air gauge execute share loop nothing", "optional list of words to re-generate a root key")
+	brain := flag.String("brain", "brain wallet context", "some words that will generate mnemonic")
+	net := flag.String("net", "mainnet", "address which network user want to create on")
 
 	flag.Parse()
 
-	if !*bip39 {
+	network = *net
+
+	if *brain != "" {
+		fmt.Printf("%-18s %s", "Brain Context:", *brain)
+		entropy, e := hex.DecodeString(Sha256(*brain))
+		if e != nil {
+			fmt.Println("hex.DecodeString error")
+			return
+		}
+		// generate a mnemomic
+		*mnemonic, _ = bip39.NewMnemonic(entropy)
+	}
+
+	if !*bip39Enable {
 		fmt.Printf("\n%-34s %-52s %-42s %-42s %s\n", "Bitcoin Address", "WIF(Wallet Import Format)", "SegWit(bech32)", "SegWit(nested)", "P2TR")
 		fmt.Println(strings.Repeat("-", 185))
 
@@ -404,16 +453,6 @@ func main() {
 		fmt.Printf("%-18s %s %s %s\n", key.GetPath(), segwitBech32, wif, p2tr)
 	}
 	fmt.Println()
-}
-
-func genPay2taprootAddress(privateKey *btcec.PrivateKey) string {
-	netParams := &chaincfg.MainNetParams
-	privateKey, err := btcec.NewPrivateKey()
-	taprootAddress, err := btcutil.NewAddressTaproot(schnorr.SerializePubKey(txscript.ComputeTaprootKeyNoScript(privateKey.PubKey())), netParams)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return taprootAddress.EncodeAddress()
 }
 
 func _main() {
