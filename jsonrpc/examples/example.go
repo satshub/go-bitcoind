@@ -74,8 +74,8 @@ func main() {
 	*/
 
 	// getbestblockhash
-	bestblockhash, err := bc.GetBestBlockhash()
-	log.Println(err, bestblockhash)
+	//bestblockhash, err := bc.GetBestBlockhash()
+	//log.Println(err, bestblockhash)
 
 	// getblock
 	/*
@@ -96,10 +96,8 @@ func main() {
 	*/
 	// TODO a finir
 	// getBlockTemplate
-	/*
-		template, err := bc.GetBlockTemplate([]string{"longpoll"}, "template")
-		log.Println(err, template)
-	*/
+	template, err := bc.GetBlockTemplate([]string{"signet", "segwit"}, []string{}, "", "", "")
+	log.Println(err, template.PreviousHash)
 
 	// getconnectioncount
 	/*

@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
+
+	"github.com/btcsuite/btcd/btcjson"
 )
 
 const (
@@ -194,24 +196,50 @@ func (b *Bitcoind) GetBlockHash(index uint64) (hash string, err error) {
 
 // getBlockTemplateParams reperesent parameters for GetBlockTemplate
 type getBlockTemplateParams struct {
+	Rules        []string `json:"rules"`
 	Mode         string   `json:"mode,omitempty"`
+	Data         string   `json:"data,omitempty"`
+	LongPollID   string   `json:"longpollid,omitempty"`
 	Capabilities []string `json:"capabilities,omitempty"`
 }
+
+//Result (If the proposal was accepted with mode=='proposal'):
+//null    (json null)
+
+//Result (If the proposal was not accepted with mode=='proposal'):
+//"str"    (string) According to BIP22
+
+// Result (Otherwise):
+// {                                          (json object)
+//   "version": n,                         (numeric) The block version
+//   "previousblockhash": "xxxx",          (string) The hash of current highest block
+// ......
+// }
 
 // TODO a finir
 // GetBlockTemplate Returns data needed to construct a block to work on.
 // See BIP_0022 for more info on params.
-func (b *Bitcoind) GetBlockTemplate(capabilities []string, mode string) (template string, err error) {
+func (b *Bitcoind) GetBlockTemplate(rules []string, capabilities []string, mode string, data string, longpollid string) (template btcjson.GetBlockTemplateResult, err error) {
 	params := getBlockTemplateParams{
+		Rules:        rules,
+		Data:         data,
 		Mode:         mode,
 		Capabilities: capabilities,
+		LongPollID:   longpollid,
 	}
 	// TODO []interface{}{mode, capa}
 	r, err := b.client.call("getblocktemplate", []getBlockTemplateParams{params})
 	if err = handleError(err, &r); err != nil {
-		return
+		return btcjson.GetBlockTemplateResult{}, err
 	}
-	return
+
+	var blockTemplateResponse btcjson.GetBlockTemplateResult
+	err = json.Unmarshal(r.Result, &blockTemplateResponse)
+	if err != nil {
+		return btcjson.GetBlockTemplateResult{}, err
+	}
+
+	return blockTemplateResponse, nil
 }
 
 type ChainTip struct {
