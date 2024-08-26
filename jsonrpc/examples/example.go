@@ -99,6 +99,8 @@ func main() {
 	template, err := bc.GetBlockTemplate([]string{"signet", "segwit"}, []string{}, "", "", "")
 	log.Println(err, template.PreviousHash)
 
+	blockheader, err := bc.GetBlockheader(template.PreviousHash)
+	log.Println(err, blockheader)
 	// getconnectioncount
 	/*
 		count, err := bc.GetConnectionCount()
