@@ -3,7 +3,7 @@
  * Author: Yihen.Liu
  * Create: 2021-07-30
  */
-package p2sh
+package main
 
 import (
 	"bytes"
@@ -20,7 +20,7 @@ import (
 // SpendMultiSig we can broadcast raw tx in: https://blockstream.info/testnet/tx/push or by bitcoin-cli sendrawtranscation.
 func SpendMultiSig() (string, error) {
 	// you can use your wif
-	wifStr1 := "cUUPbCpaRTdYXXFUXfDDSAHwEHbqayKMvzs1sQhgMcKtrAuPoUj7" //8725
+	wifStr1 := "cSeEkntEySVvLHAjJ9PaypAUZFJacrCQSj73d8hXhykhETQ38nuu" //通过address包生成的私钥, Path(BIP84)
 	wif1, err := btcutil.DecodeWIF(wifStr1)
 	if err != nil {
 		return "", err
@@ -28,14 +28,14 @@ func SpendMultiSig() (string, error) {
 	// public key extracted from wif.PrivKey
 	pk1 := wif1.PrivKey.PubKey().SerializeCompressed()
 
-	wifStr2 := "cTRFPhJZfRjYxf15pzE5XRocs4YMdzJb1nHW5g89RLjqm3w4zbtU" //3712.5
+	wifStr2 := "cQJ1CwMcLeL8RZKTk3RNYyKPu9Q9SidQSdEy1KLrxRw1kZrjeNkT" //通过address包生成的私钥, Path(BIP84)
 	wif2, err := btcutil.DecodeWIF(wifStr2)
 	if err != nil {
 		return "", err
 	}
 	pk2 := wif2.PrivKey.PubKey().SerializeCompressed()
 
-	wifStr3 := "cSGrjKnJo6uxXCpf1YmKPwQmQDB7FyRk277GPvER1KDeSYJ13nUX" //1875.625
+	wifStr3 := "cUVDyeJwR17x1soRJWg9wPxkgyjpmnZjpV2WTSpK6CfLRnzqz49g" //通过address包生成的私钥, Path(BIP84)
 	wif3, err := btcutil.DecodeWIF(wifStr3)
 	if err != nil {
 		return "", nil
@@ -61,7 +61,7 @@ func SpendMultiSig() (string, error) {
 	redeemTx := wire.NewMsgTx(wire.TxVersion)
 
 	// you should provide your UTXO hash
-	utxoHash, err := chainhash.NewHashFromStr("f133a702b8a4692bb72a14d50f2830d3b2c0b53d2e07249b3021d65f2836ff77")
+	utxoHash, err := chainhash.NewHashFromStr("be7f3a84f7c95fe18d677878be20eb722075697edfad2d96a01276b2f6b924bd")
 	if err != nil {
 		return "", nil
 	}
@@ -74,7 +74,7 @@ func SpendMultiSig() (string, error) {
 	redeemTx.AddTxIn(txIn)
 
 	// adding the output to tx
-	decodedAddr, err := btcutil.DecodeAddress("bcrt1qa2u8nlqasxjkctuukjr4ve7wknvdd7mkvgn4qd", &chaincfg.RegressionNetParams)
+	decodedAddr, err := btcutil.DecodeAddress("tb1qv7pu97v4fsws6ym6zxsysn9umdr677rq0sh777", &chaincfg.SigNetParams)
 	if err != nil {
 		return "", err
 	}
@@ -84,7 +84,7 @@ func SpendMultiSig() (string, error) {
 	}
 
 	//adding the output to charge address
-	chargeAddress, err := btcutil.DecodeAddress("bcrt1qht7jcacajzanpqa9y2tx7rz2ce9uckqwc2xype", &chaincfg.RegressionNetParams)
+	chargeAddress, err := btcutil.DecodeAddress("tb1qz7f44c225fkdnu2ywfr9nj4h2rns0vyxn9jfwn", &chaincfg.SigNetParams)
 	if err != nil {
 		return "", err
 	}
@@ -93,11 +93,11 @@ func SpendMultiSig() (string, error) {
 		return "", err
 	}
 	// adding the destination address and the amount to the transaction
-	redeemTxOut := wire.NewTxOut(799999000, destinationAddrByte)
+	redeemTxOut := wire.NewTxOut(800000, destinationAddrByte)
 	redeemTx.AddTxOut(redeemTxOut)
 
 	//charge Tx Out
-	chargeTxOut := wire.NewTxOut(200000000, chargeAddressByte)
+	chargeTxOut := wire.NewTxOut(100000, chargeAddressByte)
 	redeemTx.AddTxOut(chargeTxOut)
 	// signing the tx
 

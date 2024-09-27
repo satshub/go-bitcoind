@@ -3,7 +3,7 @@
  * Author: Yihen.Liu
  * Create: 2021-07-30
  */
-package p2sh
+package main
 
 import (
 	"encoding/hex"

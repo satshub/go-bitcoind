@@ -1,0 +1,29 @@
+{
+  "Logger": {
+    "LogLevel": 1,
+    "LogFileDir": "./.logs/"
+  },
+  "Signers":{
+	  "WIFs":[
+		  "cSeEkntEySVvLHAjJ9PaypAUZFJacrCQSj73d8hXhykhETQ38nuu",
+		  "cQJ1CwMcLeL8RZKTk3RNYyKPu9Q9SidQSdEy1KLrxRw1kZrjeNkT",
+		  "cUVDyeJwR17x1soRJWg9wPxkgyjpmnZjpV2WTSpK6CfLRnzqz49g"
+	  ],
+	  "Threshold":2
+  },
+
+  "Spent":{
+	  "WIFs":[
+		  "cSeEkntEySVvLHAjJ9PaypAUZFJacrCQSj73d8hXhykhETQ38nuu",
+		  "cUVDyeJwR17x1soRJWg9wPxkgyjpmnZjpV2WTSpK6CfLRnzqz49g"],
+
+		"TxId":"7684099c414873f69942def2d99cadb788d8c22bc64d0b868a38e7a1ed945671",
+		"UtxoIndex":0,
+		"Receiver":"tb1qv7pu97v4fsws6ym6zxsysn9umdr677rq0sh777",
+		"ReceiverAmount":890000,
+		"Charger":"tb1qz7f44c225fkdnu2ywfr9nj4h2rns0vyxn9jfwn",
+		"ChargerAmount":100000
+  },
+  "Electrum":"106.75.5.22:50001",
+  "Network":"signet"
+}

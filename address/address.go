@@ -1,4 +1,4 @@
-package main
+package address
 
 import (
 	"crypto/sha256"
@@ -336,10 +336,10 @@ func Sha256(context string) string {
 	return fmt.Sprintf("%x", bs)
 }
 
-var network string
+var Network string
 
 func NetworkParams() *chaincfg.Params {
-	switch network {
+	switch Network {
 	case "mainnet":
 		return &chaincfg.MainNetParams
 	case "testnet":
@@ -352,43 +352,41 @@ func NetworkParams() *chaincfg.Params {
 		return &chaincfg.MainNetParams
 	}
 }
-func main() {
+
+func DefaultExecutive() {
 	compress := true // generate a compressed public key
-	bip39Enable := flag.Bool("bip39", false, "mnemonic code for generating deterministic keys")
+	bip39Enable := flag.Bool("bip39", true, "mnemonic code for generating deterministic keys")
 	pass := flag.String("pass", "", "protect bip39 mnemonic with a passphrase")
 	number := flag.Int("n", 10, "set number of keys to generate")
 	mnemonic := flag.String("mnemonic", "scout shoot capable river old waste air gauge execute share loop nothing", "optional list of words to re-generate a root key")
-	brain := flag.String("brain", "brain wallet context", "some words that will generate mnemonic")
-	net := flag.String("net", "mainnet", "address which network user want to create on")
+	brain := flag.String("brain", "hello world", "some words that will generate mnemonic")
+	net := flag.String("net", "signet", "address which network user want to create on")
 
 	flag.Parse()
 
-	network = *net
+	Network = *net
 
 	if *brain != "" {
-		fmt.Printf("%-18s %s", "Brain Context:", *brain)
 		entropy, e := hex.DecodeString(Sha256(*brain))
 		if e != nil {
-			fmt.Println("hex.DecodeString error")
-			return
+			panic("hex.DecodeString error")
 		}
 		// generate a mnemomic
 		*mnemonic, _ = bip39.NewMnemonic(entropy)
 	}
 
-	if !*bip39Enable {
+	if *bip39Enable {
 		fmt.Printf("\n%-34s %-52s %-42s %-42s %s\n", "Bitcoin Address", "WIF(Wallet Import Format)", "SegWit(bech32)", "SegWit(nested)", "P2TR")
 		fmt.Println(strings.Repeat("-", 185))
 
 		for i := 0; i < *number; i++ {
 			wif, address, segwitBech32, segwitNested, p2tr, err := Generate(compress)
 			if err != nil {
-				log.Fatal(err)
+				panic("generate bip39 err:" + err.Error())
 			}
 			fmt.Printf("%-34s %s %s %s %s\n", address, wif, segwitBech32, segwitNested, p2tr)
 		}
 		fmt.Println()
-		return
 	}
 
 	km, err := NewKeyManager(128, *pass, *mnemonic)

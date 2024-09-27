@@ -1,0 +1,6 @@
+{
+  "Logger": {
+    "LogLevel": 1,
+    "LogFileDir": "./.logs/"
+  }
+}

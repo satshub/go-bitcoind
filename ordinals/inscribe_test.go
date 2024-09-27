@@ -687,7 +687,7 @@ func BatchTaprootSendCoinsImmediately(destinations []string, amounts []int64, ut
 		unspentList, err := btcApiClient.ListUnspent(utxoTaprootAddress)
 
 		if err != nil {
-			return nil, nil, nil, 0, errors.New("list unspent utxo err," + err.Error())
+			return nil, nil, nil, 0, errors.New("list unspent utxo err," + err.Error() + "taproot addr:" + utxoTaprootAddress.EncodeAddress())
 		}
 
 		for i := range unspentList {
@@ -745,9 +745,9 @@ func TestOnceMuxReceivers(t *testing.T) {
 	}
 	enableRBF := true
 	onlyOneRevealAddr := true
-	commitTxHash, revealTxHashList, _, _, err := BatchTaprootSendCoinsImmediately(destinations, amounts, privateKeyHex, enableRBF, onlyOneRevealAddr, &chaincfg.TestNet3Params)
+	commitTxHash, revealTxHashList, _, _, err := BatchTaprootSendCoinsImmediately(destinations, amounts, privateKeyHex, enableRBF, onlyOneRevealAddr, &chaincfg.SigNetParams)
 	println("commit tx hash:%s, revealTxHashList:%v", commitTxHash, revealTxHashList)
 	if err != nil {
-		//log.Errorf("batch inscribe NFT err:", err.Error())
+		println("err:" + err.Error())
 	}
 }

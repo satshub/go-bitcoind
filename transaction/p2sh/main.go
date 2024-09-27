@@ -3,11 +3,11 @@
  * Author: Yihen.Liu
  * Create: 2021-07-30
  */
-package p2sh
+package main
 
 import "fmt"
 
-func _main() {
+func main() {
 	redeemScript, redeemHash, addr, err := BuildMultiSigRedeemScript()
 	if err == nil {
 		fmt.Println("redeem script:", redeemScript)
@@ -22,7 +22,7 @@ func _main() {
 
 }
 
-func main() {
+func _main() {
 	if res, err := DisAsembleScript(); err != nil {
 		fmt.Println("err:", err.Error())
 	} else {

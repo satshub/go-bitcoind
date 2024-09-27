@@ -1011,3 +1011,59 @@ func (b *Bitcoind) EstimateSmartFeeWithMode(minconf int, mode string) (ret Estim
 	err = json.Unmarshal(r.Result, &ret)
 	return
 }
+
+func (b *Bitcoind) SubmitBlock(block string, dummy string) (res string, err error) {
+	r, err := b.client.call("submitblock", []interface{}{block, dummy})
+	if err = handleError(err, &r); err != nil {
+		return "", err
+	}
+
+	err = json.Unmarshal(r.Result, &res)
+	return
+}
+
+func (b *Bitcoind) WalletProcessPsbt(psbt string, sign bool, signHashType string, bip32derivs bool, finalize bool) (*btcjson.WalletProcessPsbtResult, error) {
+	r, err := b.client.call("walletprocesspsbt", []interface{}{psbt, sign, signHashType, bip32derivs, finalize})
+	if err = handleError(err, &r); err != nil {
+		return nil, err
+	}
+
+	var walletProcessPsbtResponse btcjson.WalletProcessPsbtResult
+	err = json.Unmarshal(r.Result, &walletProcessPsbtResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return &walletProcessPsbtResponse, nil
+}
+
+// ranges, for examples:  "[0,2]"
+func (b *Bitcoind) DeriveAddresses(descriptor string, ranges string) (*btcjson.DeriveAddressesResult, error) {
+	r, err := b.client.call("deriveaddresses", []interface{}{descriptor, ranges})
+	if err = handleError(err, &r); err != nil {
+		return nil, err
+	}
+
+	var deriveAddressResponse btcjson.DeriveAddressesResult
+	err = json.Unmarshal(r.Result, &deriveAddressResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return &deriveAddressResponse, nil
+}
+
+func (b *Bitcoind) GetAddressInfo(address string) (*btcjson.GetAddressInfoResult, error) {
+	r, err := b.client.call("getaddressinfo", []interface{}{address})
+	if err = handleError(err, &r); err != nil {
+		return nil, err
+	}
+
+	var addressInfoResponse btcjson.GetAddressInfoResult
+	err = json.Unmarshal(r.Result, &addressInfoResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return &addressInfoResponse, nil
+}

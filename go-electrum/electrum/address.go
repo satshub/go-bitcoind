@@ -12,7 +12,7 @@ import (
 // AddressToElectrumScriptHash converts valid bitcoin address to electrum scriptHash sha256 encoded, reversed and encoded in hex
 // https://electrumx.readthedocs.io/en/latest/protocol-basics.html#script-hashes
 func AddressToElectrumScriptHash(addressStr string) (string, error) {
-	address, err := btcutil.DecodeAddress(addressStr, &chaincfg.MainNetParams)
+	address, err := btcutil.DecodeAddress(addressStr, &chaincfg.SigNetParams)
 	if err != nil {
 		return "", err
 	}
