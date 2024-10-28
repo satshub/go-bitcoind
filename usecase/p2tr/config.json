@@ -25,5 +25,5 @@
 		"ChargerAmount":100000
   },
   "Electrum":"106.75.5.22:50001",
-  "Network":"mainnet"
+  "Network":"signet"
 }

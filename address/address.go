@@ -349,7 +349,7 @@ func NetworkParams() *chaincfg.Params {
 	case "simnet":
 		return &chaincfg.SimNetParams
 	default:
-		return &chaincfg.MainNetParams
+		panic("error network type:" + Network)
 	}
 }
 

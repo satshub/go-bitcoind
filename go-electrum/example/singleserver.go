@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	client, err := electrum.NewClientTCP(context.Background(), "106.75.5.22:50001")
+	client, err := electrum.NewClientTCP(context.Background(), "45.43.60.97:60601")
 
 	if err != nil {
 		log.Fatal(err)
@@ -35,8 +35,8 @@ func main() {
 			time.Sleep(3 * time.Second)
 		}
 	}()
-	//tb1pst5dyk7tdymccy0xydcyyzvqgz2022t8576sjz2l65fzulrvy5rqcv6les
-	scriptHash, err := electrum.AddressToElectrumScriptHash("2NCAZEVJwprU5vX7uTgBwj9Z3Jq4Xaa93LQ")
+
+	scriptHash, err := electrum.AddressToElectrumScriptHash("tb1pph5avhhj5qsv6fpmfvcwc0klhhyndss4xh360a27uumsuc0mquxsen7lel")
 	if err != nil {
 		log.Fatal("address to script hash error:", err)
 	} else {
@@ -45,17 +45,34 @@ func main() {
 			log.Fatal("list unspent error:", err)
 		} else {
 			for _, utxo := range utxos {
-				log.Printf("utxo: %v", utxo)
+				log.Printf("utxo: %+v", utxo)
 
 			}
 
 		}
 	}
+	//tb1pst5dyk7tdymccy0xydcyyzvqgz2022t8576sjz2l65fzulrvy5rqcv6les
+	/*
+		scriptHash, err := electrum.AddressToElectrumScriptHash("tb1psntfmv0zj708fahh6xtwydjtdsht92yd20t42rr9uun6eapf4fwqdc8w7w")
+		if err != nil {
+			log.Fatal("address to script hash error:", err)
+		} else {
+			utxos, err := client.ListUnspent(context.Background(), scriptHash)
+			if err != nil {
+				log.Fatal("list unspent error:", err)
+			} else {
+				for _, utxo := range utxos {
+					log.Printf("utxo: %v", utxo)
 
-	res, err := client.BroadcastTransaction(context.Background(), "0100000001715694eda1e7388a860b4dc62bc2d888b7ad9cd9f2de4299f67348419c09847601000000fd44010047304402203d9a658b835631e27e964f45e47a2b7f1e0bfd6ec71353d607dfefb7d643bed8022034a912b38ec2d8364d0d5cd5c6b1aaf6d02909c0438550f61fbb47b5a3d9c60e0147304402200a563c98ad80df23baa489412336ff8b28c94263ab9db3eb470f6b5d09136b8902202c865a0d6257431640a34e2cd65ac696ff06ab8e2d2fd62a1bb8e74d63d4763501473044022058a960b1fdf19160d668eeb373162cb5b7e7e6a6f4ccfec56313cc895a0bf25d022038da5970b2f567cf28a6cae6c7e4cdcb1e6193237d350d71825b731d50037f45014c6952210291becfb80f5875b7cac527b0643b1b5962c8c7f735d7eaeefa558c31d4e6b04d21023770069d381fd9ac4ef66e37e974caee3ca34e03a0f325c91e2563ab79c3191d21021ba401b1e6deb228c0cfa27fb6d5515424a794d10d665c5d742cab10f5648bae53aeffffffff0290940d00000000001600146783c2f9954c1d0d137a11a0484cbcdb47af7860a08601000000000016001417935ae14aa26cd9f144724659cab750e707b08600000000")
-	if err != nil {
-		log.Fatal("broadcast error:", err)
-	}
-	log.Printf("broadcast result: %v", res)
+				}
+
+			}
+		}
+		res, err := client.BroadcastTransaction(context.Background(), "010000000001019ab40807b2f27d9a31be7845fe542160fd05ca4563bc3ba2fa640a9434d00ea60000000000ffffffff0120f40e0000000000160014671e42d7bc7bb57990fe21cf05a09c31ea982f5f0140f937a331e63897761dbbe0a298eabd2a68584e1ce785c6f5c552e4cffebb2eb4b132899b11539efb40c8efc0c235d4963b389b35b517b6ff67577fa166a3837800000000")
+		if err != nil {
+			log.Fatal("broadcast error:", err)
+		}
+		log.Printf("broadcast result: %v", res)
+	*/
 	select {}
 }
