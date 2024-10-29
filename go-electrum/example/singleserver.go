@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	client, err := electrum.NewClientTCP(context.Background(), "45.43.60.97:60601")
+	client, err := electrum.NewClientTCP(context.Background(), "node.sathub.io:60601")
 
 	if err != nil {
 		log.Fatal(err)
