@@ -31,7 +31,7 @@ type Utxo struct {
 }
 
 func (c *MempoolClient) GetUtxos(address string) ([]*Utxo, error) {
-	res, err := c.request(http.MethodGet, fmt.Sprintf("/address/%s/utxo", address), nil)
+	res, err := c.request(http.MethodGet, fmt.Sprintf("/address/%s/utxo", address), nil, "json")
 	if err != nil {
 		return nil, err
 	}

@@ -22,13 +22,22 @@ type BTCAPIClient interface {
 	ListUnspent(address btcutil.Address) ([]*UnspentOutput, error)
 }
 
-func Request(method, baseURL, subPath string, requestBody io.Reader) ([]byte, error) {
+func Request(method, baseURL, subPath string, requestBody io.Reader, mode string) ([]byte, error) {
 	url := fmt.Sprintf("%s%s", baseURL, subPath)
 	req, err := http.NewRequest(method, url, requestBody)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create request")
 	}
-	req.Header.Add("Content-Type", "application/json")
+
+	switch mode {
+	case "json":
+		req.Header.Add("Content-Type", "application/json")
+	case "text":
+		req.Header.Add("Content-Type", "text/plain")
+	default:
+		panic("mode not supported")
+	}
+
 	req.Header.Add("Accept", "application/json")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {

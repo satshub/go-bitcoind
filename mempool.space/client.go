@@ -31,8 +31,8 @@ func NewClient(netParams *chaincfg.Params) *MempoolClient {
 	}
 }
 
-func (c *MempoolClient) request(method, subPath string, requestBody io.Reader) ([]byte, error) {
-	return Request(method, c.baseURL, subPath, requestBody)
+func (c *MempoolClient) request(method, subPath string, requestBody io.Reader, mode string) ([]byte, error) {
+	return Request(method, c.baseURL, subPath, requestBody, mode)
 }
 
 var _ BTCAPIClient = (*MempoolClient)(nil)

@@ -32,3 +32,4 @@ _testmain.go
 
 usecase/p2sh/.logs/
 usecase/address/.logs/
+ordinals/inscribefiles/

@@ -605,7 +605,7 @@ func (tool *InscriptionTool) Inscribe() (commitTxHash *chainhash.Hash, revealTxH
 	fees = tool.calculateFee()
 	//TODO: 如果发送失败，需要重试
 	for i := 0; i < 8; i++ {
-		time.Sleep(time.Second * 3) //为了防止频繁读mempool.space引发被临时ban掉
+		//time.Sleep(time.Second * 3) //为了防止频繁读mempool.space引发被临时ban掉
 		commitTxHash, err = tool.sendRawTransaction(tool.commitTx)
 		if err != nil {
 			time.Sleep(time.Second * time.Duration(math.Pow(2, float64(i+1))))
@@ -623,7 +623,7 @@ func (tool *InscriptionTool) Inscribe() (commitTxHash *chainhash.Hash, revealTxH
 	inscriptions = make([]string, len(tool.txCtxDataList))
 	for i := range tool.revealTx {
 		for j := 0; j < 8; j++ {
-			time.Sleep(time.Second * 3) //为了防止频繁读mempool.space引发被临时ban掉
+			//time.Sleep(time.Second * 3) //为了防止频繁读mempool.space引发被临时ban掉
 			_revealTxHash, err := tool.sendRawTransaction(tool.revealTx[i])
 			if err != nil && j == 7 {
 				// Serialize the transaction and convert to hex string.

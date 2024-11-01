@@ -13,7 +13,7 @@ import (
 )
 
 func (c *MempoolClient) GetRawTransaction(txHash *chainhash.Hash) (*wire.MsgTx, error) {
-	res, err := c.request(http.MethodGet, fmt.Sprintf("/tx/%s", txHash.String()), nil)
+	res, err := c.request(http.MethodGet, fmt.Sprintf("/tx/%s/raw", txHash.String()), nil, "json")
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (c *MempoolClient) BroadcastTx(tx *wire.MsgTx) (*chainhash.Hash, error) {
 		return nil, err
 	}
 
-	res, err := c.request(http.MethodPost, "/tx", strings.NewReader(hex.EncodeToString(buf.Bytes())))
+	res, err := c.request(http.MethodPost, "/tx", strings.NewReader(hex.EncodeToString(buf.Bytes())), "text")
 	if err != nil {
 		return nil, err
 	}

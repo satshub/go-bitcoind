@@ -26,7 +26,7 @@ type UTXO struct {
 type UTXOs []UTXO
 
 func (c *MempoolClient) ListUnspent(address btcutil.Address) ([]*UnspentOutput, error) {
-	res, err := c.request(http.MethodGet, fmt.Sprintf("/address/%s/utxo", address.EncodeAddress()), nil)
+	res, err := c.request(http.MethodGet, fmt.Sprintf("/address/%s/utxo", address.EncodeAddress()), nil, "json")
 	if err != nil {
 		return nil, err
 	}

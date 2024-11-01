@@ -16,6 +16,7 @@ import (
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/satshub/go-bitcoind/mempool.space"
+	"github.com/satshub/go-bitcoind/usecase/p2sh/log"
 )
 
 func BatchIssuedImmediately(destinations, files []string, utxoPrivateKeyHex string, netParams *chaincfg.Params) (
@@ -98,16 +99,14 @@ func BatchIssuedImmediately(destinations, files []string, utxoPrivateKeyHex stri
 	if len(failTxIndex) > 0 {
 		return nil, nil, []string{}, 0, errors.New("inscribe err, fail indexs:" + fmt.Sprintf("%+v", failTxIndex))
 	}
-	/*
-		log.Infof("commitTxHash:%s", commitTxHash.String())
-		for i := range revealTxHashList {
-			log.Infof("revealTxHash:%s", revealTxHashList[i].String())
-		}
-		for i := range inscriptions {
-			log.Infof("inscription, ", inscriptions[i])
-		}
-		log.Debugf("reveal tx and commit tx total fees: ", fees)
-	*/
+	log.Infof("commitTxHash:%s", commitTxHash.String())
+	for i := range revealTxHashList {
+		log.Infof("revealTxHash:%s", revealTxHashList[i].String())
+	}
+	for i := range inscriptions {
+		log.Infof("inscription, ", inscriptions[i])
+	}
+	log.Debugf("reveal tx and commit tx total fees: ", fees)
 	return commitTxHash, revealTxHashList, inscriptions, fees, nil
 }
 

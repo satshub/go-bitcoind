@@ -26,16 +26,21 @@ func TestBatchInscribe(t *testing.T) {
 	privateKeyHex := "a868774f27a34e28aef14a95e2ddfa9baf2bc9a83b632b111e8e9d1eb5fbb6e9"
 	destinations := []string{
 		"tb1qg9hl3ulg20hel6aen5dtmhzhprjee039heu5hj",
-		"2ND3jnE3N6iCdzHf77SY44LinxRx5Vg7zDs",
-		"mzHchNdivKvhLRLww3VLC37VqwEHPMN3ak",
+	}
+	for i := 1; i <= 999; i++ {
+		destinations = append(destinations, "tb1qg9hl3ulg20hel6aen5dtmhzhprjee039heu5hj")
 	}
 	fileList := []string{
-		"1.txt",
-		"2.txt",
-		"3.txt",
+		"1.jpeg",
 	}
-
-	PrepareBatchIssued(1, destinations, fileList, privateKeyHex, 1, 1, &chaincfg.TestNet3Params)
+	for i := 1; i <= 999; i++ {
+		fileList = append(fileList, "1.jpeg")
+	}
+	//PrepareBatchIssued(1, destinations, fileList, privateKeyHex, 1, 1, &chaincfg.TestNet3Params)
+	_, _, _, _, err := BatchIssuedImmediately(destinations, fileList, privateKeyHex, &chaincfg.SigNetParams)
+	if err != nil {
+		fmt.Println("BatchIssuedImmediately error:", err)
+	}
 }
 
 // ////////////////////////////////////////////////////////////////////////////////////////
@@ -188,18 +193,22 @@ func (tool *SenderToolBox) initToolBox(net *chaincfg.Params, request *SenderRequ
 	}
 	totalRevealPrevOutput, err := tool.buildEmptyRevealTx(request.SingleRevealTxOnly, destinations, amounts, revealOutValue, request.FeeRate, request.EnableRBF)
 	if err != nil {
+		fmt.Println("buildEmptyRevealTx error:", err)
 		return err
 	}
 	err = tool.buildCommitTx(request.CommitTxOutPointList, totalRevealPrevOutput, request.CommitFeeRate, request.ChangeAddress, request.EnableRBF)
 	if err != nil {
+		fmt.Println("buildCommitTx error:", err, "totalRevealPrevOutput:", totalRevealPrevOutput, "request.CommitFeeRate:", request.CommitFeeRate, "request.ChangeAddress:", request.ChangeAddress, "request.EnableRBF:", request.EnableRBF, "request.CommitTxOutPointList:", request.CommitTxOutPointList)
 		return err
 	}
 	err = tool.completeRevealTx()
 	if err != nil {
+		fmt.Println("completeRevealTx error:", err)
 		return err
 	}
 	err = tool.signCommitTx()
 	if err != nil {
+		fmt.Println("signCommitTx error:", err)
 		return errors.Wrap(err, "sign commit tx error")
 	}
 	return err
@@ -361,6 +370,7 @@ func (tool *SenderToolBox) getTxOutByOutPoint(outPoint *wire.OutPoint) (*wire.Tx
 	if tool.client.rpcClient != nil {
 		tx, err := tool.client.rpcClient.GetRawTransactionVerbose(&outPoint.Hash)
 		if err != nil {
+			fmt.Println("-------GetRawTransactionVerbose error:", err)
 			return nil, err
 		}
 		if int(outPoint.Index) >= len(tx.Vout) {
@@ -377,8 +387,10 @@ func (tool *SenderToolBox) getTxOutByOutPoint(outPoint *wire.OutPoint) (*wire.Tx
 		}
 		txOut = wire.NewTxOut(int64(amount), pkScript)
 	} else {
+		fmt.Println("-------GetRawTransaction outPoint.Hash:", outPoint.Hash)
 		tx, err := tool.client.btcApiClient.GetRawTransaction(&outPoint.Hash)
 		if err != nil {
+			fmt.Println("-------GetRawTransaction error:", err)
 			return nil, err
 		}
 		if int(outPoint.Index) >= len(tx.TxOut) {
@@ -411,6 +423,7 @@ func (tool *SenderToolBox) buildCommitTx(commitTxOutPointList []*wire.OutPoint, 
 	for i := range commitTxOutPointList {
 		txOut, err := tool.getTxOutByOutPoint(commitTxOutPointList[i])
 		if err != nil {
+			fmt.Println("-------getTxOutByOutPoint error:", err)
 			return err
 		}
 		if changePkScript == nil { // first sender as change address, 找零地址设置, 默认回到发送者地址；
@@ -685,7 +698,7 @@ func BatchTaprootSendCoinsImmediately(destinations []string, amounts []int64, ut
 		}
 
 		unspentList, err := btcApiClient.ListUnspent(utxoTaprootAddress)
-
+		fmt.Println("unspentList:", unspentList)
 		if err != nil {
 			return nil, nil, nil, 0, errors.New("list unspent utxo err," + err.Error() + "taproot addr:" + utxoTaprootAddress.EncodeAddress())
 		}
@@ -739,9 +752,9 @@ func TestOnceMuxReceivers(t *testing.T) {
 		"tb1pn0p79t9vx39kscnya2xwa45d79fc3x0ella2a634wcxwm0e0f6uqqm0ya9",
 	}
 	amounts := []int64{
-		100,
-		200,
-		300,
+		800,
+		800,
+		800,
 	}
 	enableRBF := true
 	onlyOneRevealAddr := true
